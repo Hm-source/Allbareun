@@ -1,6 +1,8 @@
 // User.js
 
 const mongoose = require('mongoose'); // mongoose를 선언해주고,
+const moment = require('moment');
+
 
 const userSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
     user_id: {
