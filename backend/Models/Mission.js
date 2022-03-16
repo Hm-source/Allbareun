@@ -6,7 +6,6 @@ const missionSchema = mongoose.Schema({  // userSchema라는 이름의 schema를
     misson_id: {
         type: String,
         maxLength: 50,
-        trim: true, // space를 없애준다.
         unique: 1, // 같은값은 하나만 존재할 수 있다.
     },
     content: {
