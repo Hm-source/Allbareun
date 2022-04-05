@@ -20,7 +20,7 @@ app.get('/', function (req, res) {
     res.send('hello world!!');
 });
 
-app.post('api/user/register', (req, res) => {
+app.post('/api/user/register', (req, res) => {
     //회원 가입할 때 필요한 정보들을 client에서 가져오면
     // 정보를 데이터베이스에 넣는다.
     const user = new User(req.body);
@@ -36,7 +36,7 @@ app.post('api/user/register', (req, res) => {
 });
 
 //login router
-app.post('api/user/login', (req, res) => {
+app.post('/api/user/login', (req, res) => {
     //요청된 id을 데이터베이스에서 있는지 찾는다.
     User.findOne( { user_id: req.body.user_id}, (err, user) => {
         if(!user) {
