@@ -19,7 +19,6 @@ const userRouter = require('./routes/user');
 const indexRouter = require('./routes/index');
 
 app.use('/', indexRouter);
-
 app.use('/api/users/', userRouter);
 
 
