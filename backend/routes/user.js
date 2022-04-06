@@ -3,6 +3,7 @@ const router = express.Router();
 
 //user 모델을 가져옴
 const { User } = require('../Models/User');
+const { auth } = require('../middleware/auth');
 
 router.post('/register', (req, res) => {
     //회원 가입할 때 필요한 정보들을 client에서 가져오면
@@ -46,5 +47,32 @@ router.post('/login', (req, res) => {
     
     })
 });
+
+//auth 미들웨어 추가
+router.get('/auth', auth , (req, res) => {
+    //미들웨어 통과해 왔다는 이야기는 Authentication이 true라는 말이다.
+    // user_type이 child이면 지녀 유저, parent이면 부모 유저.
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.user_type === 'child' ? false : true,
+        isAuth: true,
+        user_id: req.user.user_id,
+        name : req.user.name,
+        user_age: req.user.user_age,
+        type: req.user.user_type,
+    })
+});
+
+
+router.get('/logout', auth ,(req, res) => {
+    User.findOneAndUpdate({ _id: req.user._id },
+        { token: "" },
+        (err, user) => {
+            if(err) return res.json({ success: false, err });
+            return res.status(200).json({ success: true });
+        });
+});
+
+
 
 module.exports = router;
