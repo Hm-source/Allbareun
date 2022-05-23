@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 �
     },
     user_type: {
         type: String,
-        enum: ['parent', 'child'],
+        enum: ['parent', 'child', 'admin'],
         default: 'parent', 
     },
     user_age: {
@@ -33,6 +33,10 @@ const userSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 �
     register_date: {
         type: Date,
         default: moment().format("YYYY-MM-DD hh:mm:ss")
+    },
+    partner_id: {
+        type: String,
+        default: "",
     },
     token: {
         type: String,
@@ -76,12 +80,12 @@ userSchema.methods.generateToken = function(cb) {
     //jsonwebtoken을 이용해서 token을 생성한다.
     var token = jwt.sign(user._id.toHexString(), 'secretToken')
 
-    user.token = token
+    user.token = token;
     user.save(function(err, user) {
-        if(err) return cb(err)
-        cb(null, user)
-    })
-}
+        if(err) return cb(err);
+        cb(null, user);
+    });
+};
 
 userSchema.statics.findByToken = function(token, cb) {
     var user = this;
@@ -97,6 +101,8 @@ userSchema.statics.findByToken = function(token, cb) {
 
         });
 };
+
+
 
 
 const User = mongoose.model('User', userSchema); // userSchema를 model로 감싸준다. 

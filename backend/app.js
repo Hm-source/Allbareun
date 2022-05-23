@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cookieParser());
 
+
 const userRouter = require('./routes/user');
 const indexRouter = require('./routes/index');
 
