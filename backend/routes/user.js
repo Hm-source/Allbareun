@@ -65,7 +65,7 @@ router.get('/auth', auth , (req, res) => {
     })
 });
 
-
+//NOTE logout
 router.get('/logout', auth ,(req, res) => {
     User.findOneAndUpdate({ _id: req.user._id },
         { token: "" },
@@ -75,8 +75,10 @@ router.get('/logout', auth ,(req, res) => {
         });
 });
 
+// NOTE 사용자 부모, 자녀 등록
 router.post('/partner',auth, (req, res) => {
     User.findOne( { user_id: req.body.user_id}, (err, user) => {
+        if(err) return res.json( {success:false, err});
         console.log("사용자 찾기");
         if(!user) {
             return res.json({
@@ -93,5 +95,48 @@ router.post('/partner',auth, (req, res) => {
         }
     })
 });
+
+// bmi function
+function BMI(weight, height) {
+    return(Math.round((weight / (height * height))*1000000)/100);
+}
+
+// NOTE height, weight 등록
+router.post('/mypage/:userId', auth, (req, res) => {
+    const weight = req.body.user_weight;
+    const height = req.body.user_height;
+    console.log(weight, height);
+    User.findOneAndUpdate({ _id: req.user._id },
+        { user_height: height, 
+            user_weight: weight, 
+            user_bmi: BMI(weight, height) },
+        (err) => {
+        if(err) return res.json({ success: false, err });
+        return res.status(200).json({ success: true });
+    });
+        
+});
+
+// NOTE height, weight, bmi 확인
+router.get('/mypage/:userId', auth, (req, res) => {
+    User.findOne({user_id: req.params.userId}, (err, user) => {
+        if(err) return res.json( {success:false, err});
+        if(!user) {
+            return res.json({
+                success: false,
+                message: "해당하는 사용자가 없습니다."
+            });
+        } else {
+            const userInfo = user;
+            return res.json({
+                success: true,
+                code:200,
+                message: "조회 성공",
+                user : userInfo //_id, user_age, user_bmi, user_height, user_weight
+            })
+        }}).select('name user_id user_age user_weight user_height user_bmi')
+});
+
+
 
 module.exports = router;

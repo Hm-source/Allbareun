@@ -11,25 +11,49 @@ const userSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 �
         type: String,
         maxLength: 50,
         trim: true, // space를 없애준다.
-        unique: 1, // 같은값은 하나만 존재할 수 있다.
+        unique: 1,
+        required:true // 같은값은 하나만 존재할 수 있다.
     },
     user_password: {
         type: String,
         maxLength: 60,
         trim: true,
+        required:true
     },
     name: { 
         type: String,
         maxLength: 50,
+        required:true
     },
     user_type: {
         type: String,
         enum: ['parent', 'child', 'admin'],
-        default: 'parent', 
+        required:true
     },
     user_age: {
         type: Number,
+        required:true
     },
+    user_sex: {
+        type: String,
+        enum: [ 'M', 'F'], //Male, Female
+        required:true
+    },
+    user_height: {
+        type: Number,
+    },
+    user_weight: {
+        type: Number,
+    },
+    user_bmi: {
+        type: Number,
+    },
+    user_state: {
+        type: String,
+        enum: ['NO','OV','OB'],
+        default : 'NO',
+        // 'NO' -> normal , 'OV' -> overweight, 'OB' -> Obesity
+    }, 
     register_date: {
         type: Date,
         default: moment().format("YYYY-MM-DD hh:mm:ss")
