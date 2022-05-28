@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const salt_rounds = 10;
 const jwt = require('jsonwebtoken');
 
+
 const userSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
     user_id: {
         type: String,
@@ -30,31 +31,16 @@ const userSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 �
         enum: ['parent', 'child', 'admin'],
         required:true
     },
-    user_age: {
-        type: Number,
-        required:true
-    },
     user_sex: {
         type: String,
         enum: [ 'M', 'F'], //Male, Female
         required:true
     },
-    user_height: {
-        type: Number,
+    updatedAt: {
+        type:Date,
+        default: moment().format("YYYY-MM-DD")
     },
-    user_weight: {
-        type: Number,
-    },
-    user_bmi: {
-        type: Number,
-    },
-    user_state: {
-        type: String,
-        enum: ['NO','OV','OB'],
-        default : 'NO',
-        // 'NO' -> normal , 'OV' -> overweight, 'OB' -> Obesity
-    }, 
-    register_date: {
+    registeredAt: {
         type: Date,
         default: moment().format("YYYY-MM-DD hh:mm:ss")
     },
@@ -115,15 +101,14 @@ userSchema.statics.findByToken = function(token, cb) {
     var user = this;
     //토큰을 decode한다. user._id +'' = token
     jwt.verify(token, 'secretToken', (_err, decoded) => {
-            //user id를 이용해서 user를 찾은 다음에
-            //client에서 가져온 token과 db에 보관된 token이 일치하는지 확인
-            user.findOne({ "_id": decoded, "token": token }, (_err, user) => {
-                if (_err)
-                    return cb(_err);
-                cb(null, user);
-            });
-
+        //user id를 이용해서 user를 찾은 다음에
+        //client에서 가져온 token과 db에 보관된 token이 일치하는지 확인
+        user.findOne({ "_id": decoded, "token": token }, (_err, user) => {
+            if (_err)
+                return cb(_err);
+            cb(null, user);
         });
+    });
 };
 
 

@@ -18,10 +18,11 @@ app.use(cookieParser());
 
 const userRouter = require('./routes/user');
 const indexRouter = require('./routes/index');
+const mypageRouter = require('./routes/mypage');
 
 app.use('/', indexRouter);
 app.use('/api/users/', userRouter);
-
+app.use('/api/mypage/', mypageRouter);
 
 app.listen(port, () => console.log(`${port}포트입니다.`));
 
