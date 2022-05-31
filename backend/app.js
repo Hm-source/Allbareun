@@ -19,10 +19,12 @@ app.use(cookieParser());
 const userRouter = require('./routes/user');
 const indexRouter = require('./routes/index');
 const mypageRouter = require('./routes/mypage');
+const intakeRouter = require('./routes/intake');
 
 app.use('/', indexRouter);
 app.use('/api/users/', userRouter);
 app.use('/api/mypage/', mypageRouter);
+app.use('/api/intake/', intakeRouter);
 
 app.listen(port, () => console.log(`${port}포트입니다.`));
 
@@ -32,7 +34,8 @@ mongoose
     .connect(
     config.mongoURI ,
     )
-    .then(() => console.log('MongoDB conected'))
+    .then(() => console.log('MongoDB connected'))
     .catch((err) => {
     console.log(err);
 });
+
