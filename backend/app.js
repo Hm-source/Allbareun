@@ -20,11 +20,13 @@ const userRouter = require('./routes/user');
 const indexRouter = require('./routes/index');
 const mypageRouter = require('./routes/mypage');
 const intakeRouter = require('./routes/intake');
+const reportRouter = require('./routes/report');
 
 app.use('/', indexRouter);
 app.use('/api/users/', userRouter);
 app.use('/api/mypage/', mypageRouter);
 app.use('/api/intake/', intakeRouter);
+app.use('/api/report/', reportRouter);
 
 app.listen(port, () => console.log(`${port}포트입니다.`));
 
