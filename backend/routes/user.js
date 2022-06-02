@@ -93,7 +93,7 @@ router.patch('/partner',auth, (req, res) => {
             // NOTE 성공
             User.updateOne({ _id: req.user._id }, { $set: { partner_id : req.body.user_id, pairing: true }} ,(err, doc) => {
                     if(err) return res.json( {success: false, err});
-                    return res.status(200).json({success:true});
+                    return res.status(200).json({success:true, user_id : req.user.user_id , partner_id: req.body.user_id , user_type: req.user.user_type, partner_type : user.user_type});
                 })  
         }
     })
