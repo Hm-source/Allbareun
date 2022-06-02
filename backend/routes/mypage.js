@@ -7,6 +7,7 @@ const moment = require('moment');
 const { User } = require('../Models/User');
 const { auth } = require('../middleware/auth');
 const { BodyInfo } = require('../Models/BodyInfo');
+const { Report } = require('../Models/Report');
 
 
 // NOTE 사용자 신체정보 등록
@@ -15,29 +16,47 @@ router.post('/body/:id', auth , (req, res) => {
     const _age = req.body.age;
     const _bmr = setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex);
     console.log(_bmi, _age, setup.checkObesity(_bmi, _age));
-    const newBodyInfo = new BodyInfo({
-        user: req.user._id,
-        height: req.body.height,
-        weight: req.body.weight,
-        age: _age,
-        bmi: _bmi,
-        bmr: _bmr,
-        active_kcal: req.body.active_kcal,
-        state: setup.checkObesity(_bmi, _age)
-    });
-
-    newBodyInfo.save(async (err, result)=> {
-        if(err) {
-            return res.status(400).send(err);
-        }
+    BodyInfo.findOne({ user: req.user._id, updatedAt: moment().format('YYYY-MM-DD')}, (err, doc) => {
+        console.log(doc);
+        if (doc != null) {return res.json( { message: "오늘 신체 정보는 다시 입력하기에서 수정하세요.", doc});}
         else {
-            return res.json({
-                success: true,
-                result
-            })
-        }
+            const newBodyInfo = new BodyInfo({
+                user: req.user._id,
+                height: req.body.height,
+                weight: req.body.weight,
+                age: _age,
+                bmi: _bmi,
+                bmr: _bmr,
+                active_kcal: req.body.active_kcal,
+                state: setup.checkObesity(_bmi, _age)
+            });
+        
+            newBodyInfo.save((err, result)=> {
+                if(err) {
+                    return res.status(400).send(err);
+                }
+                else {
+                    return res.json({
+                        success: true,
+                        result
+                    })
+                }
+            });
+        } 
     });
+        
+    
 });
+
+// const kcalInfo = new Report({
+//     user: req.user._id,
+//     name: req.user.name,
+//     age: req.body.age,
+//     user_kcal: setup.checkUserKcal(_bmi, _bmr, req.body.active_kcal)
+// })
+// kcalInfo.save(async (err) => {
+//     if(err) return res.status(400).send(err);
+// })
 
 // NOTE 사용자 신체정보 조회 
 router.get('/body/:id', auth, async (req,res) => {
@@ -53,6 +72,7 @@ router.patch('/body/:id', auth, (req, res) => {
             height: req.body.height,
             bmi: setup.checkBMI(req.body.weight, req.body.height),
             age: req.body.age,
+            active_kcal: req.body.active_kcal,
             state: setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), req.body.age),
             bmr: setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex)
         }, (err, result) => {
@@ -62,3 +82,4 @@ router.patch('/body/:id', auth, (req, res) => {
 });
 
 module.exports = router;
+

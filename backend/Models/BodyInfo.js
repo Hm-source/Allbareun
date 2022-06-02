@@ -5,7 +5,7 @@ const moment = require('moment');
 
 const bodyInfoSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
     user: {
-        type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     height: {
         type: Number,
@@ -47,7 +47,6 @@ const bodyInfoSchema = mongoose.Schema({  // userSchema라는 이름의 schema�
     updatedAt: {
         type:Date,
         default: moment().format("YYYY-MM-DD"),
-        unique: 1
     }
 });
 
