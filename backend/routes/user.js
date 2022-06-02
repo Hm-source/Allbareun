@@ -45,7 +45,7 @@ router.post('/login', (req, res) => {
                 //토큰을 저장한다. 쿠키? local storage? 일단 쿠키에
                 res.cookie("x_auth", user.token)
                 .status(200)
-                .json({loginSuccess: true, userId: user._id})
+                .json({loginSuccess: true, userId: user._id, partner: user.partner_id, pairing: user.pairing })
 
             })
         })
@@ -79,7 +79,7 @@ router.get('/logout', auth ,(req, res) => {
 });
 
 // NOTE 사용자 부모, 자녀 등록
-router.post('/partner',auth, (req, res) => {
+router.patch('/partner',auth, (req, res) => {
     User.findOne( { user_id: req.body.user_id}, (err, user) => {
         if(err) return res.json( {success:false, err});
         console.log("사용자 찾기");
@@ -91,7 +91,7 @@ router.post('/partner',auth, (req, res) => {
         } else {
             console.log("찾았으면");
             // NOTE 성공
-            User.updateOne({ partner_id : ""}, { $set: { partner_id : req.body.user_id}} ,(err) => {
+            User.updateOne({ _id: req.user._id }, { $set: { partner_id : req.body.user_id, pairing: true }} ,(err, doc) => {
                     if(err) return res.json( {success: false, err});
                     return res.status(200).json({success:true});
                 })  
