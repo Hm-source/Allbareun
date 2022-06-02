@@ -1,32 +1,67 @@
 // User.js
 
 const mongoose = require('mongoose'); // mongoose를 선언해주고,
+const moment = require('moment');
 
 const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
-    user_id: {
-        type: String,
-        maxLength: 50,
-        trim: true, // space를 없애준다.
-        unique: 1, // 같은값은 하나만 존재할 수 있다.
+    user: {
+        type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
     },
     name: { 
-        type: String,
-        maxLength: 50,
+        type:String
     },
-    user_age: {
+    age: {
+        type: Number
+    },
+    user_kcal: {
+        type: Number
+    },
+    intake_kcal: {
         type: Number,
     },
-    nutrition_score: {
-        type: Float32Array,
+    carbon : { // 탄수화물
+        type: Number
     },
-    register_at: {
+    protein: { // 단백질
+        type: Number
+    },
+    fat: { // 지방
+        type: Number
+    },
+    vitamin_C: { //비타민 C
+        type: Number
+    },
+    vitamin_D: { // 비타민 D
+        type: Number
+    },
+    calcium: { // 칼슘
+        type: Number
+    },
+    zinc: { // 아연
+        type: Number
+    },
+    magnesium: { // 마그네슘
+        type: Number
+    },
+    salt: { // 나트륨
+        type: Number
+    },
+    nutrition_score: {
+        type: Number,
+    },
+    registeredAt: {
         type: Date,
         default: moment().format("YYYY-MM-DD hh:mm:ss")
     },
-
-
+    updatedAt: {
+        type: Date,
+        default: moment().format("YYYY-MM-DD hh:mm:ss")
+    }
 });
 
-const User = mongoose.model('User', userSchema); // userSchema를 model로 감싸준다. 
 
-module.exports = { User }; // User라는 모델을 본 파일 밖에서도 사용할 수 있도록 export 구문을 작성해준다. 
+
+
+const Report = mongoose.model('Report', reportSchema); 
+
+module.exports = { Report }; 

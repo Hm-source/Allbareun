@@ -3,9 +3,30 @@ const express = require('express'); // express 임포트
 const app = express(); // app생성
 const port = 3000;
 
-app.get('/', function (req, res) {
-    res.send('hello world!!');
-});
+const cookieParser = require('cookie-parser');
+const config = require('./config/key');
+
+
+
+//body-parser 가 node.js 4.x 이후로 기본으로 제공된다.
+//application/x-www-form-urlencoded
+app.use(express.urlencoded({extended:true}));
+//application/json
+app.use(express.json());
+app.use(cookieParser());
+
+
+const userRouter = require('./routes/user');
+const indexRouter = require('./routes/index');
+const mypageRouter = require('./routes/mypage');
+const intakeRouter = require('./routes/intake');
+const reportRouter = require('./routes/report');
+
+app.use('/', indexRouter);
+app.use('/api/users/', userRouter);
+app.use('/api/mypage/', mypageRouter);
+app.use('/api/intake/', intakeRouter);
+app.use('/api/report/', reportRouter);
 
 app.listen(port, () => console.log(`${port}포트입니다.`));
 
@@ -13,9 +34,10 @@ app.listen(port, () => console.log(`${port}포트입니다.`));
 const mongoose = require('mongoose');
 mongoose
     .connect(
-    'mongodb+srv://hyomin:gFsWgeC2Tpk4YNr@allbareun-cluster.m2ki4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    config.mongoURI ,
     )
-    .then(() => console.log('MongoDB conected'))
+    .then(() => console.log('MongoDB connected'))
     .catch((err) => {
     console.log(err);
 });
+
