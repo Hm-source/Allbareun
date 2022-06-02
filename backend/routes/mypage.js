@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const setup = require('../set');
+const moment = require('moment');
+
 //user 모델을 가져옴
 const { User } = require('../Models/User');
 const { auth } = require('../middleware/auth');
@@ -46,7 +48,7 @@ router.get('/body/:id', auth, async (req,res) => {
 
 // NOTE 신체정보 수정
 router.patch('/body/:id', auth, (req, res) => {
-    BodyInfo.findOneAndUpdate({user : req.user._id}, 
+    BodyInfo.findOneAndUpdate({user : req.user._id, updatedAt : moment().format('YYYY-MM-DD') }, 
         {   weight: req.body.weight,
             height: req.body.height,
             bmi: setup.checkBMI(req.body.weight, req.body.height),
