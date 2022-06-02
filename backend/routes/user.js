@@ -45,7 +45,7 @@ router.post('/login', (req, res) => {
                 //토큰을 저장한다. 쿠키? local storage? 일단 쿠키에
                 res.cookie("x_auth", user.token)
                 .status(200)
-                .json({loginSuccess: true, userId: user._id, partner: user.partner_id, pairing: user.pairing })
+                .json({loginSuccess: true, userId: user._id, user_type: user.user_type, partner: user.partner_id, pairing: user.pairing })
 
             })
         })
