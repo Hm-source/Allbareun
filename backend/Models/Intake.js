@@ -13,11 +13,6 @@ const intakeSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 
     food : {
         type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Food'
     },
-    _kcal : {
-        type: String,
-        maxLength: 150,
-        trim: true,
-    },
     selectedAt: { // 식품 선택 날짜
         type: Date,
         default: moment().format("YYYY-MM-DD hh:mm:ss")

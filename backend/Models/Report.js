@@ -4,17 +4,17 @@ const mongoose = require('mongoose'); // mongoose를 선언해주고,
 const moment = require('moment');
 
 const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
-    users: {
+    user: {
         type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
     },
     name: { 
-        type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
+        type:String
     },
     age: {
-        type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
+        type: Number
     },
-    kcal: {
-        type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
+    user_kcal: {
+        type: Number
     },
     intake_kcal: {
         type: Number,
@@ -57,7 +57,6 @@ const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 
         type: Date,
         default: moment().format("YYYY-MM-DD hh:mm:ss")
     }
-
 });
 
 

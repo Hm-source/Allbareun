@@ -7,6 +7,7 @@ const { auth } = require('../middleware/auth');
 const { BodyInfo } = require('../Models/BodyInfo');
 const { Intake } = require('../Models/Intake');
 const { Food } = require('../Models/Food');
+const { Report } = require('../Models/Report');
 
 
 router.post('/', auth, async (req, res) => {
