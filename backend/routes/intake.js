@@ -42,7 +42,7 @@ router.get('/list', auth, async (req, res) => {
     Intake.find({user: req.user._id}, (err, doc) => {
         if (err) return res.json(err);
         return res.json(doc);
-    })
+    }).populate('food');
 });
 
 
