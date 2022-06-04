@@ -76,7 +76,7 @@ router.patch('/body/:id', auth, (req, res) => {
             user_kcal: setup.checkUserKcal(setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), req.body.age), setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex), req.body.active_kcal),
             state: setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex) ,req.body.age),
             bmr: setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex)
-        }, (err, result) => {
+        }, {new: true}, (err, result) => {
         if (err) res.json({ success: false });
         res.json(result);
     });
