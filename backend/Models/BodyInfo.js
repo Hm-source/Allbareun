@@ -44,6 +44,9 @@ const bodyInfoSchema = mongoose.Schema({  // userSchema라는 이름의 schema�
     bmr: {
         type: Number
     },
+    user_kcal: {
+        type: Number
+    },
     updatedAt: {
         type:Date,
         default: moment().format("YYYY-MM-DD"),

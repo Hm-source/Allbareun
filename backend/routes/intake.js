@@ -8,20 +8,22 @@ const { BodyInfo } = require('../Models/BodyInfo');
 const { Intake } = require('../Models/Intake');
 const { Food } = require('../Models/Food');
 const { Report } = require('../Models/Report');
+const { ObjectId } = require('mongodb');
+const { json } = require('body-parser');
 
 
-router.post('/', auth, async (req, res) => {
-    const fname = req.body.name;
-    console.log(fname);
-    Food.findOne({'식품명': fname}, (err, _food) => {
-        // 먹은 음식 intakes 모델에 저장
-        const newIntakeFood = new Intake({
+router.post('/add', auth, async (req, res) => {
+    Food.findOne( { name : req.body.name }, (err, food) => {
+        if (err) return res.json({success : false});
+        console.log(food);
+        
+        let newIntakeFood = new Intake({
             user: req.user._id,
-            name: req.body.name,
-            food: _food
+            name : req.body.name,
+            food: food
         });
 
-        newIntakeFood.save(async (err, result)=> {
+        newIntakeFood.save((err, result)=> {
             if(err) {
                 return res.status(400).send(err);
             }
@@ -33,17 +35,21 @@ router.post('/', auth, async (req, res) => {
                 })
             }
         });
-        
-        // 먹은 음식 영양소별 저장
-
     })
 });
-    
+
 router.get('/list', auth, async (req, res) => {
+    var total_kcal = 0;
     Intake.find({user: req.user._id}, (err, doc) => {
         if (err) return res.json(err);
-        return res.json(doc);
+        
+        for (i = 0; i < 2; i++) {
+            total_kcal += doc[i].food.kcal;
+            console.log(doc[i].food.kcal);
+        }
+        return res.json({total : total_kcal, doc});
     }).populate('food');
+    
 });
 
 
