@@ -39,7 +39,6 @@ router.post('/body/:id', auth , (req, res) => {
                 user_kcal: _kcal
             });
             newReport.save((result) => {
-                console.log(result);
             });
             newBodyInfo.save((err, result)=> {
                 if(err) {
