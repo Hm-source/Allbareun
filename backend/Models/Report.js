@@ -46,6 +46,33 @@ const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 
     salt: { // 나트륨
         type: Number
     },
+    carbon_score : { // 탄수화물
+        type: Number
+    },
+    protein_score : { // 단백질
+        type: Number
+    },
+    fat_score : { // 지방
+        type: Number
+    },
+    vitamin_C_score : { //비타민 C
+        type: Number
+    },
+    vitamin_D_score : { // 비타민 D
+        type: Number
+    },
+    calcium_score : { // 칼슘
+        type: Number
+    },
+    zinc_score : { // 아연
+        type: Number
+    },
+    magnesium_score : { // 마그네슘
+        type: Number
+    },
+    salt_score : { // 나트륨
+        type: Number
+    },
     nutrition_score: {
         type: Number,
     },

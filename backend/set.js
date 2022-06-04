@@ -77,4 +77,35 @@ module.exports.checkUserKcal = (isObesity, bmr, active_kcal) => {
     } else if (isObesity == 'NO') {
         return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.no_kcal;
     }
-}
+};
+
+module.exports.getDefaultProtein= (user_kcal, protein) => {
+    const protein_score = (protein/(user_kcal * (Math.round(0.0363479256208549 *1000) / 1000)))*100;
+    return protein_score;
+};
+
+module.exports.getDefaultFat= (user_kcal, fat) => {
+    const fat_score = (fat/(user_kcal * (Math.round(0.0284252224753397 *1000) / 1000)))*100;
+    return fat_score;
+};
+
+module.exports.getDefaultCarbon= (user_kcal, carbon) => {
+    const carbon_score = (carbon/(user_kcal * (Math.round(0.156843711775202*1000) / 1000)))*100;
+    return carbon_score;
+};
+
+module.exports.getDefaultCalcium= (user_kcal, calcium) => {
+    const calcium_score = (calcium/(user_kcal * (Math.round(0.28236693561962 *1000) / 1000)))*100;
+    return calcium_score;
+};
+
+module.exports.getDefaultSalt= (user_kcal, salt) => {
+    const salt_score = (salt/(user_kcal * (Math.round(1.42534591689017 *1000) / 1000)))*100;
+    return salt_score;
+};
+
+module.exports.getDefaultVitaminC= (user_kcal,vitamin_C) => {
+    const vitamin_C_score = (vitamin_C/(user_kcal * (Math.round(0.0347768513427074 *1000) / 1000)))*100;
+    return vitamin_C_score;
+};
+
