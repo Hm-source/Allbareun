@@ -59,7 +59,7 @@ router.get('/:id', auth, (req, res) => {
                         calcium_score : setup.getCalciumScore(user_kcal, total_calcium),
                         salt_score : setup.getSaltScore(user_kcal, total_salt),
                         nutrition_score: setup.getNutritionScore( setup.getCarbonScore(user_kcal, total_carbon),setup.getProteinScore(user_kcal,total_protein),setup.getFatScore(user_kcal, total_fat),setup.getVitaminCScore(user_kcal, total_vitaminC),setup.getCalciumScore(user_kcal, total_calcium),setup.getSaltScore(user_kcal, total_salt))
-                }}, (err, doc) => {
+                }}, {new: true}, (err, doc) => {
                 if(err) return res.json(err);
                 return res.json({total : total_kcal, doc});
             });
