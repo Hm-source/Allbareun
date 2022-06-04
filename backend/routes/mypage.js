@@ -76,7 +76,7 @@ router.patch('/body/:id', auth, (req, res) => {
             user_kcal: setup.checkUserKcal(setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), req.body.age), setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex), req.body.active_kcal),
             state: setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex) ,req.body.age),
             bmr: setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex)
-        }, {new: true}, (err, result) => {
+        }, {new: true}, (err, result) => { // {new :true} -> 업데이트된 문서 한 번에 반환, 안해주면 다음에 반환함.
         if (err) res.json({ success: false });
         res.json(result);
     });
