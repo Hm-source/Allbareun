@@ -2,8 +2,9 @@
 module.exports.ob_kcal = 200;
 module.exports.ow_kcal = 100;
 module.exports.no_kcal = 0;
-module.exports.sleep_kcal = 20;
-module.exports.sleep_time = 8;
+module.exports.sleep_kcal = 40;
+module.exports.sleep_time = 9;
+module.exports.child_basic_kcal = 300;
 // bmi function
 module.exports.checkBMI = (weight, height) => {
     return(Number(Math.round((weight / (height * height))*1000000)/100));
@@ -67,13 +68,13 @@ module.exports.checkBMR = (height, weight, age, sex) => {
     }
 };
 
-module.exports.checkUserKcal = (bmi, bmr, active_kcal) => {
+module.exports.checkUserKcal = (isObesity, bmr, active_kcal) => {
 
-    if(bmi == 'OB') {
-        return bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.ob_kcal;
-    } else if (bmi == 'OW') {
-        return bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.ow_kcal;
-    } else if (bmi == 'NO') {
-        return bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.no_kcal;
+    if(isObesity == 'OB') {
+        return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.ob_kcal;
+    } else if (isObesity == 'OW') {
+        return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.ow_kcal;
+    } else if (isObesity == 'NO') {
+        return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.no_kcal;
     }
 }

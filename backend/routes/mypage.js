@@ -14,10 +14,11 @@ const { Report } = require('../Models/Report');
 router.post('/body/:id', auth , (req, res) => {
     const _bmi = setup.checkBMI(req.body.weight, req.body.height);
     const _age = req.body.age;
+    const _active_kcal = req.body.active_kcal;
     const _bmr = setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex);
+    const _kcal = setup.checkUserKcal(setup.checkObesity(_bmi, _age), _bmr, _active_kcal);
     console.log(_bmi, _age, setup.checkObesity(_bmi, _age));
     BodyInfo.findOne({ user: req.user._id, updatedAt: moment().format('YYYY-MM-DD')}, (err, doc) => {
-        console.log(doc);
         if (doc != null) {return res.json( { message: "오늘 신체 정보는 다시 입력하기에서 수정하세요.", doc});}
         else {
             const newBodyInfo = new BodyInfo({
@@ -27,10 +28,19 @@ router.post('/body/:id', auth , (req, res) => {
                 age: _age,
                 bmi: _bmi,
                 bmr: _bmr,
-                active_kcal: req.body.active_kcal,
+                active_kcal: _active_kcal,
+                user_kcal: _kcal,
                 state: setup.checkObesity(_bmi, _age)
             });
-        
+            const newReport = new Report( {
+                user: req.user._id,
+                age: _age,
+                name: req.user.name,
+                user_kcal: _kcal
+            });
+            newReport.save((result) => {
+                console.log(result);
+            });
             newBodyInfo.save((err, result)=> {
                 if(err) {
                     return res.status(400).send(err);
@@ -48,15 +58,6 @@ router.post('/body/:id', auth , (req, res) => {
     
 });
 
-// const kcalInfo = new Report({
-//     user: req.user._id,
-//     name: req.user.name,
-//     age: req.body.age,
-//     user_kcal: setup.checkUserKcal(_bmi, _bmr, req.body.active_kcal)
-// })
-// kcalInfo.save(async (err) => {
-//     if(err) return res.status(400).send(err);
-// })
 
 // NOTE 사용자 신체정보 조회 
 router.get('/body/:id', auth, async (req,res) => {
@@ -73,7 +74,8 @@ router.patch('/body/:id', auth, (req, res) => {
             bmi: setup.checkBMI(req.body.weight, req.body.height),
             age: req.body.age,
             active_kcal: req.body.active_kcal,
-            state: setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), req.body.age),
+            user_kcal: setup.checkUserKcal(setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), req.body.age), setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex), req.body.active_kcal),
+            state: setup.checkObesity(setup.checkBMI(req.body.weight, req.body.height), setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex) ,req.body.age),
             bmr: setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex)
         }, (err, result) => {
         if (err) res.json({ success: false });

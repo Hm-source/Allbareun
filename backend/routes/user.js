@@ -17,7 +17,7 @@ router.post('/register', (req, res) => {
         // 성공 못하면 false와 err 보냄
         if(err) return res.json({ success: false, err});
         return res.status(200).json({
-            success: true
+            success: true, userInfo
         })
     })
 });
