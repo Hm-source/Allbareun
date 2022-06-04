@@ -5,7 +5,7 @@ const moment = require('moment');
 
 const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
     user: {
-        type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     name: { 
         type:String

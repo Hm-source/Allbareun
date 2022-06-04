@@ -1,18 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-//user 모델을 가져옴
+const setup = require('../set');
+
+
 const { User } = require('../Models/User');
 const { auth } = require('../middleware/auth');
 const { Report } = require('../Models/Report');
 const { doc } = require('prettier');
 const { Intake } = require('../Models/Intake');
+const { Food } = require('../Models/Food');
 
 
 
 router.get('/:id', auth, (req, res) => {
-    Intake.aggregate({ $group : { user: req.user._id , $gte: {selectedAt : moment().format('YYYY-MM-DD')}} }, (err, doc) => {
-    })
-});
+    var total_kcal = 0;
+    var _count = 0;
+    Intake.count({user:req.user._id}, function( err, count){
+        _count = count;
+    });
+    Intake.find({user: req.user._id}, (err, doc) => {
+        if (err) return res.json(err);
+        
+        for (i = 0; i < _count ; i++) {
+            total_kcal += doc[i].food.kcal;
+            console.log(doc[i].food.kcal);
+        }
+        Report.findOneAndUpdate({user: req.user._id}, {$set : { intake_kcal : total_kcal}}, (err, _kcal) => {
+            return res.json({total : total_kcal, _kcal});
+        });
 
+    }).populate('food'); 
+});
 module.exports = router;
