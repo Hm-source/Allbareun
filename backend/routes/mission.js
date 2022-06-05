@@ -13,13 +13,13 @@ const { Food } = require('../Models/Food');
 const { FoodSelect } = require('../Models/FoodSelect');
 const { Mission } = require('../Models/Mission');
 const { BodyInfo } = require('../Models/BodyInfo');
-const { ObjectId } = require('mongodb');
+const { ObjectId, FindCursor } = require('mongodb');
 
 const now = moment().format('YYYY-MM-DD');
 
 //부모한테 추천되는 미션들
 router.get('/recommend/:id', auth, async (req, res) => {
-    Report.find({user: req.user._id}, (err, doc) => {
+    Report.find({user_id : req.params.id}, (err, doc) => {
         const carbon = doc[0].carbon_score;
         const protein = doc[0].protein_score;
         const fat = doc[0].fat_score;
@@ -133,7 +133,10 @@ router.get('/recommend/:id', auth, async (req, res) => {
                     mission5: docs[index5]
                     });
             } else {
-                return res.json({message : '오늘 미션은 모두 추천되었습니다.'});
+                Mission.find({user_id : req.params.id}, (err, mission) => {
+                    return res.json( {message : '오늘 미션은 모두 추천되었습니다.', mission});
+                })
+                
             }
         });
     })
@@ -141,12 +144,11 @@ router.get('/recommend/:id', auth, async (req, res) => {
 
 //부모가 미션 선택
 router.post('/chooseMission', auth, (req, res) => {
-    const user = req.user._id;
     const content = req.body.content;
 
 
-    for (i=0; i<5; i++) {
-        Mission.findOneAndUpdate({"content.name": content[i], selectedAt : now, mission_chose: 'N'}, 
+    for (i=0; i<content.length; i++) {
+        Mission.findOneAndUpdate({user:req.user._id, "content.name": content[i], selectedAt : now, mission_chose: 'N'}, 
         { mission_chosen : 'Y' }, {new : true});
     }
     
@@ -157,6 +159,27 @@ router.get('/showMission', auth, (req, res) => {
     Mission.find({user_id : req.params.id, selectedAt : now, mission_chosen : 'Y'}, (err, docs) => {
         res.json(docs);
     })
+});
+
+// 자녀가 미션 수행하면 intake되게해야함.
+router.post('/performMission', auth, (req, res) => {
+    const content = req.body.content;
+
+
+    for (i=0; i<content.length; i++) {
+        Mission.findOneAndUpdate({user_id : req.user._id, "content.name": content[i], selectedAt : now, mission_chose: 'N'}, 
+        { mission_state : 'done' }, {new : true}, (err, doc) => {
+            console.log(doc.name);
+            var newIntake = new Intake({
+                user : req.user._id,
+                user_id : req.user.user_id,
+                name : content[0].name,
+                food : content[0]._id
+            });
+            newIntake.save();
+        });
+    }
+    
 });
 
 module.exports = router; 

@@ -22,7 +22,6 @@ router.post('/body/:id', auth , (req, res) => {
         if (doc != null) {return res.json( { message: "오늘 신체 정보는 다시 입력하기에서 수정하세요.", doc});}
         else {
             const newBodyInfo = new BodyInfo({
-                user: req.user._id,
                 user_id : req.params.id,
                 height: req.body.height,
                 weight: req.body.weight,
