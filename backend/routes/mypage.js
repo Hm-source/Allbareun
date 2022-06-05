@@ -23,6 +23,7 @@ router.post('/body/:id', auth , (req, res) => {
         else {
             const newBodyInfo = new BodyInfo({
                 user: req.user._id,
+                user_id : req.params.id,
                 height: req.body.height,
                 weight: req.body.weight,
                 age: _age,
@@ -38,8 +39,7 @@ router.post('/body/:id', auth , (req, res) => {
                 name: req.user.name,
                 user_kcal: _kcal
             });
-            newReport.save((result) => {
-            });
+            newReport.save();
             newBodyInfo.save((err, result)=> {
                 if(err) {
                     return res.status(400).send(err);
@@ -67,7 +67,7 @@ router.get('/body/:id', auth, async (req,res) => {
 
 // NOTE 신체정보 수정
 router.patch('/body/:id', auth, (req, res) => {
-    BodyInfo.findOneAndUpdate({user : req.user._id, updatedAt : moment().format('YYYY-MM-DD') }, 
+    BodyInfo.findOneAndUpdate({user_id : req.params.id, updatedAt : moment().format('YYYY-MM-DD') }, 
         {   weight: req.body.weight,
             height: req.body.height,
             bmi: setup.checkBMI(req.body.weight, req.body.height),
