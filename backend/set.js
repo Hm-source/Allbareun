@@ -182,6 +182,10 @@ module.exports.getVitaminCScore= (user_kcal,vitamin_C) => {
 
 
 module.exports.getNutritionScore = (carbon_score, protein_score, fat_score, salt_score, vitamin_C_score,calcium_score ) => {
-    var nutrition_score = (carbon_score + protein_score + fat_score + salt_score + vitamin_C_score + calcium_score) / 6;
-    return nutrition_score;
+    var arr = [carbon_score , protein_score , fat_score , salt_score , vitamin_C_score , calcium_score];
+    const result = arr.reduce(function add(sum, currValue) {
+        return sum + currValue;
+    }, 0);
+    avg = Math.round(result/6)
+    return avg;
 };

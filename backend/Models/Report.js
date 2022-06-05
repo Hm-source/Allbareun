@@ -7,6 +7,9 @@ const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 
     user: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
+    user_id : {
+        type: String
+    },
     name: { 
         type:String
     },

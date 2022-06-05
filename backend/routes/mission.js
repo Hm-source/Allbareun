@@ -15,9 +15,10 @@ const { Mission } = require('../Models/Mission');
 const { BodyInfo } = require('../Models/BodyInfo');
 const { ObjectId } = require('mongodb');
 
+const now = moment().format('YYYY-MM-DD');
 
-
-router.get('/recommend', auth, async (req, res) => {
+//부모한테 추천되는 미션들
+router.get('/recommend/:id', auth, async (req, res) => {
     Report.find({user: req.user._id}, (err, doc) => {
         const carbon = doc[0].carbon_score;
         const protein = doc[0].protein_score;
@@ -26,7 +27,7 @@ router.get('/recommend', auth, async (req, res) => {
         const calcium = doc[0].calcium_score;
         const vitamin_C = doc[0].vitamin_C_score;
         var arr = [{ name : "carbon_g", value : carbon}, {name :"protein_g", value : protein} , { name: "fat_g", value: fat} , {name: "salt_mg", value: salt} , {name: "calcium_mg", value: calcium} , {name: "vitamin_C_mg", value: vitamin_C}];
-        const now = moment().format('YYYY-MM-DD');
+
         var car;
         var pro;
         var fa;
@@ -89,27 +90,27 @@ router.get('/recommend', auth, async (req, res) => {
             async function initMissions() {
                 const mission1 = new Mission({
                     user : req.user._id,
-                    user_id : req.user.user_id,
+                    user_id : req.params.id,
                     content : docs[index1],
                 })
                 const mission2 = new Mission({
                     user : req.user._id,
-                    user_id : req.user.user_id,
+                    user_id : req.params.id,
                     content : docs[index2],
                 })
                 const mission3 = new Mission({
                     user : req.user._id,
-                    user_id : req.user.user_id,
+                    user_id : req.params.id,
                     content : docs[index3],
                 })
                 const mission4 = new Mission({
                     user : req.user._id,
-                    user_id : req.user.user_id,
+                    user_id : req.params.id,
                     content : docs[index4],
                 })
                 const mission5 = new Mission({
                     user : req.user._id,
-                    user_id : req.user.user_id,
+                    user_id : req.params.id,
                     content : docs[index5],
                 })
                 const mission_arr = [mission1, mission2, mission3, mission4, mission5];
@@ -119,17 +120,43 @@ router.get('/recommend', auth, async (req, res) => {
                     console.log(e);
                 }
             }
-            initMissions();
-            return res.json({mission1 : docs[index1],
-                mission2: docs[index2],
-                mission3 : docs[index3],
-                mission4 : docs[index4],
-                mission5: docs[index5]
-                });
+            if (Mission.count({user : req.user._id, selectedAt : now}) == 0) {
+                initMissions();
+                return res.json({
+                    user : req.user._id,
+                    child_id : req.user.partner_id,
+                    user_id : req.params.id,
+                    mission1 : docs[index1],
+                    mission2: docs[index2],
+                    mission3 : docs[index3],
+                    mission4 : docs[index4],
+                    mission5: docs[index5]
+                    });
+            } else {
+                return res.json({message : '오늘 미션은 모두 추천되었습니다.'});
+            }
         });
     })
 });
 
+//부모가 미션 선택
+router.post('/chooseMission', auth, (req, res) => {
+    const user = req.user._id;
+    const content = req.body.content;
 
+
+    for (i=0; i<5; i++) {
+        Mission.findOneAndUpdate({"content.name": content[i], selectedAt : now, mission_chose: 'N'}, 
+        { mission_chosen : 'Y' }, {new : true});
+    }
+    
+});
+
+// 자녀한테 추천되는 미션
+router.get('/showMission', auth, (req, res) => {
+    Mission.find({user_id : req.params.id, selectedAt : now, mission_chosen : 'Y'}, (err, docs) => {
+        res.json(docs);
+    })
+});
 
 module.exports = router; 

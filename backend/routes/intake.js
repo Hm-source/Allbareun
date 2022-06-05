@@ -12,13 +12,14 @@ const { ObjectId } = require('mongodb');
 const { json } = require('body-parser');
 
 
-router.post('/add', auth, async (req, res) => {
+router.post('/add/:id', auth, async (req, res) => {
     Food.findOne( { name : req.body.name }, (err, food) => {
         if (err) return res.json({success : false});
         console.log(food);
         
         let newIntakeFood = new Intake({
             user: req.user._id,
+            user_id : req.params.id,
             name : req.body.name,
             food: food
         });
@@ -38,7 +39,7 @@ router.post('/add', auth, async (req, res) => {
     })
 });
 
-router.get('/list', auth, (req, res) => {
+router.get('/list/:id', auth, (req, res) => {
     var total_kcal = 0;
     Intake.find({user: req.user._id}, (err, doc) => {
         if (err) return res.json(err);

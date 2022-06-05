@@ -18,7 +18,7 @@ router.post('/body/:id', auth , (req, res) => {
     const _bmr = setup.checkBMR(req.body.height, req.body.weight, req.body.age, req.user.user_sex);
     const _kcal = setup.checkUserKcal(setup.checkObesity(_bmi, _age), _bmr, _active_kcal);
     console.log(_bmi, _age, setup.checkObesity(_bmi, _age));
-    BodyInfo.findOne({ user: req.user._id, updatedAt: moment().format('YYYY-MM-DD')}, (err, doc) => {
+    BodyInfo.findOne({ user_id: req.params.id, updatedAt: moment().format('YYYY-MM-DD')}, (err, doc) => {
         if (doc != null) {return res.json( { message: "오늘 신체 정보는 다시 입력하기에서 수정하세요.", doc});}
         else {
             const newBodyInfo = new BodyInfo({
@@ -34,9 +34,8 @@ router.post('/body/:id', auth , (req, res) => {
                 state: setup.checkObesity(_bmi, _age)
             });
             const newReport = new Report( {
-                user: req.user._id,
+                user_id: req.params.id,
                 age: _age,
-                name: req.user.name,
                 user_kcal: _kcal
             });
             newReport.save();
@@ -60,7 +59,7 @@ router.post('/body/:id', auth , (req, res) => {
 
 // NOTE 사용자 신체정보 조회 
 router.get('/body/:id', auth, async (req,res) => {
-    const bodyinfo = await BodyInfo.find({user: req.user._id});
+    const bodyinfo = await BodyInfo.find({user_id: req.params.id});
     const user = await User.findOne({user_id : req.params.id}).select('name user_age user_sex');
     res.json({ user, bodyinfo});
 });

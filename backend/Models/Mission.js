@@ -12,6 +12,11 @@ const missionSchema = mongoose.Schema({
     content: {
         type: Array
     },
+    mission_chosen : {
+        type: String,
+        enum : ['Y', 'N'],
+        default : 'N'
+    },
     mission_state: {
         type: String,
         enum: ['done', 'new'],
@@ -19,7 +24,6 @@ const missionSchema = mongoose.Schema({
     },
     selectedAt: {
         type: Date,
-        default: moment().format("YYYY-MM-DD")
     },
     performedAt: {
         type: Date
