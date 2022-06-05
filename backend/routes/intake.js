@@ -38,7 +38,7 @@ router.post('/add', auth, async (req, res) => {
     })
 });
 
-router.get('/list', auth, async (req, res) => {
+router.get('/list', auth, (req, res) => {
     var total_kcal = 0;
     Intake.find({user: req.user._id}, (err, doc) => {
         if (err) return res.json(err);

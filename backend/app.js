@@ -21,12 +21,14 @@ const indexRouter = require('./routes/index');
 const mypageRouter = require('./routes/mypage');
 const intakeRouter = require('./routes/intake');
 const reportRouter = require('./routes/report');
+const missionRouter = require('./routes/mission');
 
 app.use('/', indexRouter);
 app.use('/api/users/', userRouter);
 app.use('/api/mypage/', mypageRouter);
 app.use('/api/intake/', intakeRouter);
 app.use('/api/report/', reportRouter);
+app.use('/api/mission/', missionRouter);
 
 app.listen(port, () => console.log(`${port}포트입니다.`));
 

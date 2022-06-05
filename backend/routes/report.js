@@ -23,11 +23,14 @@ router.get('/:id', auth, (req, res) => {
     var total_salt = 0;
     var total_vitaminC = 0;
     var _count = 0;
+    var now = moment().format("YYYY-MM-DD");
+    console.log(now);
 
-    Intake.count({user:req.user._id}, function( err, count){
+    Intake.count({user:req.user._id, selectedAt : now }, function( err, count){
         _count = count;
+        console.log(_count);
     });
-    Intake.find({user: req.user._id}, (err, doc) => {
+    Intake.find({user: req.user._id, selectedAt : now}, (err, doc) => {
         if (err) return res.json(err);
         
         for (i = 0; i < _count ; i++) {
@@ -64,6 +67,6 @@ router.get('/:id', auth, (req, res) => {
                 return res.json({total : total_kcal, doc});
             });
         });
-    }).populate('food'); 
+    }).sort({ registeredAt: -1 }).populate('food'); 
 });
 module.exports = router;

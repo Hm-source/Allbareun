@@ -5,6 +5,7 @@ module.exports.no_kcal = 0;
 module.exports.sleep_kcal = 40;
 module.exports.sleep_time = 9;
 module.exports.child_basic_kcal = 300;
+module.exports.child_extra_kcal = 200;
 // bmi function
 module.exports.checkBMI = (weight, height) => {
     return(Number(Math.round((weight / (height * height))*1000000)/100));
@@ -76,6 +77,8 @@ module.exports.checkUserKcal = (isObesity, bmr, active_kcal) => {
         return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.ow_kcal;
     } else if (isObesity == 'NO') {
         return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.no_kcal;
+    } else {
+        return this.child_basic_kcal + bmr + active_kcal + (this.sleep_kcal * this.sleep_time) - this.child_extra_kcal;
     }
 };
 
