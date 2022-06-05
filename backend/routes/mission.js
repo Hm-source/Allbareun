@@ -91,31 +91,26 @@ router.get('/recommend', auth, async (req, res) => {
                     user : req.user._id,
                     user_id : req.user.user_id,
                     content : docs[index1],
-                    selectedAt : now
                 })
                 const mission2 = new Mission({
                     user : req.user._id,
                     user_id : req.user.user_id,
                     content : docs[index2],
-                    selectedAt : now
                 })
                 const mission3 = new Mission({
                     user : req.user._id,
                     user_id : req.user.user_id,
                     content : docs[index3],
-                    selectedAt : now
                 })
                 const mission4 = new Mission({
                     user : req.user._id,
                     user_id : req.user.user_id,
                     content : docs[index4],
-                    selectedAt : now
                 })
                 const mission5 = new Mission({
                     user : req.user._id,
                     user_id : req.user.user_id,
                     content : docs[index5],
-                    selectedAt : now
                 })
                 const mission_arr = [mission1, mission2, mission3, mission4, mission5];
                 try { 
