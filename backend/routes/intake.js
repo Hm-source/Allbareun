@@ -41,7 +41,7 @@ router.post('/add/:id', auth, async (req, res) => {
 
 router.get('/list/:id', auth, (req, res) => {
     var total_kcal = 0;
-    Intake.find({user: req.user._id}, (err, doc) => {
+    Intake.find({user_id: req.params.id}, (err, doc) => {
         if (err) return res.json(err);
         
         for (i = 0; i < 2; i++) {
