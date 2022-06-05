@@ -1,28 +1,28 @@
 
 const mongoose = require('mongoose'); // mongoose를 선언해주고,
+const moment = require('moment');
 
-const missionSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 작성해준다. 
+const missionSchema = mongoose.Schema({  
+    user : {
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
+    },
+    user_id : {
+        type : String
+    },
     content: {
-        type: String,
-        maxLength: 150,
-        trim: true,
+        type: Array
     },
     mission_state: {
         type: String,
         enum: ['done', 'new'],
         default: 'new', 
     },
-    mission_times: {
-        type: Number,
-        default: 0,
-    },
-    selected_date: {
+    selectedAt: {
         type: Date,
-        default: moment().format("YYYY-MM-DD hh:mm:ss")
+        default: moment().format("YYYY-MM-DD")
     },
-    performed_date: {
-        type: Date,
-        default: moment().format("YYYY-MM-DD hh:mm:ss")
+    performedAt: {
+        type: Date
     }
 });
 
