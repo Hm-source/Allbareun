@@ -120,24 +120,17 @@ router.get('/recommend/:id', auth, async (req, res) => {
                     console.log(e);
                 }
             }
-            if (Mission.count({user : req.user._id, selectedAt : now}) == 0) {
-                initMissions();
-                return res.json({
-                    user : req.user._id,
-                    child_id : req.user.partner_id,
-                    user_id : req.params.id,
-                    mission1 : docs[index1],
-                    mission2: docs[index2],
-                    mission3 : docs[index3],
-                    mission4 : docs[index4],
-                    mission5: docs[index5]
-                    });
-            } else {
-                Mission.find({user_id : req.params.id}, (err, mission) => {
-                    return res.json( {message : '오늘 미션은 모두 추천되었습니다.', mission});
-                })
-                
-            }
+            initMissions();
+            return res.json({
+                user : req.user._id,
+                child_id : req.user.partner_id,
+                user_id : req.params.id,
+                mission1 : docs[index1],
+                mission2: docs[index2],
+                mission3 : docs[index3],
+                mission4 : docs[index4],
+                mission5: docs[index5]
+            });
         });
     })
 });
@@ -145,6 +138,7 @@ router.get('/recommend/:id', auth, async (req, res) => {
 //부모가 미션 선택
 router.post('/chooseMission', auth, (req, res) => {
     const content = req.body.content;
+    console.log(content);
 
 
     for (i=0; i<content.length; i++) {
