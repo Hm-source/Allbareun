@@ -76,7 +76,7 @@ router.get('/:id', auth, (req, res) => {
 
 
 router.post('/lastMission/:id', auth, (req, res) => {
-    Mission.find({user_id : req.params.id, mission_chosen: 'Y', selectAt : /req.body.date/}, (err, docs) => {
+    Mission.find({user_id : req.params.id, mission_chosen: 'Y', selectedAt : req.body.date}, (err, docs) => {
         var mission_count = docs.length;
         return res.json({mission_amount : mission_count, docs});
     }).select('user_id content mission_state performedAt').sort({performedAt : -1});
