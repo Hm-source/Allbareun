@@ -74,10 +74,26 @@ router.get('/:id', auth, (req, res) => {
 });
 
 
+
 router.get('/lastMission/:id', auth, (req, res) => {
+
     Mission.find({user_id : req.params.id, mission_chosen: 'Y'}, (err, docs) => {
-        return res.json(docs);
+        var mission_count = docs.length;
+        return res.json({mission_amount : mission_count, docs});
     }).select('user_id content mission_state performedAt').sort({performedAt : -1});
 });
+
+router.get('/getPerformanceRate/:id', auth, (req, res) => {
+    var mission_count;
+    var done_count;
+    Mission.countDocuments({user_id : req.params.id, mission_chosen: 'Y', mission_state : 'done'}, (err, count) => {
+        done_count = count;
+        Mission.countDocuments({user_id : req.params.id, mission_chosen: 'Y'}, (err, count) => {
+            mission_count = count;
+            return res.json({performance_rate : Math.round(done_count/mission_count * 100) + "%", doneMission : done_count+"개", AllMission : mission_count + "개"});
+        })
+    })
+
+})
 
 module.exports = router;
