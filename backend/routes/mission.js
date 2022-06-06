@@ -174,6 +174,7 @@ router.post('/chooseMission', auth, (req, res) => {
             console.log(miss);
         } );
     }
+    return res.json({message: '미션을 모두 선택하셨습니다.'});
 });
 
 router.get('/chooseMission', auth, (req, res) => {
