@@ -90,7 +90,7 @@ router.get('/getPerformanceRate/:id', auth, (req, res) => {
         done_count = count;
         Mission.countDocuments({user_id : req.params.id, mission_chosen: 'Y'}, (err, count) => {
             mission_count = count;
-            return res.json({performance_rate : Math.round(done_count/mission_count * 100) + "%", doneMission : done_count+"개", AllMission : mission_count + "개"});
+            return res.json({performance_rate : Math.round(done_count/mission_count * 100), doneMission : done_count, AllMission : mission_count});
         })
     })
 
