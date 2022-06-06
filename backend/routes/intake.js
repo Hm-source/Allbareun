@@ -51,11 +51,12 @@ router.get('/list/:id', auth, (req, res) => {
         console.log(num);
         for (i = 0; i < num; i++) {
             if ( doc[i].selectedAt == now) {
+                console.log(doc[i].selectedAt);
                 total_kcal += doc[i].food.kcal; 
             }  
         }
         console.log("오늘 먹은 음식의 칼로리는 " + total_kcal);
-        return res.json({total : total_kcal, doc});
+        return res.json({doc});
     }).populate('food');
     
 });
