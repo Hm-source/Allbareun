@@ -7,6 +7,9 @@ const bodyInfoSchema = mongoose.Schema({  // userSchema라는 이름의 schema�
     user: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
+    user_id : {
+        type: String
+    },
     height: {
         type: Number,
         validate(value) {

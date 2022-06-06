@@ -9,9 +9,9 @@ const { auth } = require('../middleware/auth');
 const { Report } = require('../Models/Report');
 const { doc } = require('prettier');
 const { Intake } = require('../Models/Intake');
-const { Food } = require('../Models/Food');
+const { FoodSelect } = require('../Models/FoodSelect');
 const { BodyInfo } = require('../Models/BodyInfo');
-
+const { Mission } = require('../Models/Mission');
 
 
 router.get('/:id', auth, (req, res) => {
@@ -26,11 +26,11 @@ router.get('/:id', auth, (req, res) => {
     var now = moment().format("YYYY-MM-DD");
     console.log(now);
 
-    Intake.count({user:req.user._id, selectedAt : now }, function( err, count){
+    Intake.count({user_id : req.params.id, selectedAt : now }, function( err, count){
         _count = count;
         console.log(_count);
     });
-    Intake.find({user: req.user._id, selectedAt : now}, (err, doc) => {
+    Intake.find({user_id : req.params.id, selectedAt : now}, (err, doc) => {
         if (err) return res.json(err);
         
         for (i = 0; i < _count ; i++) {
@@ -42,10 +42,12 @@ router.get('/:id', auth, (req, res) => {
             total_salt += doc[i].food.salt_mg;
             total_vitaminC += doc[i].food.vitaminC_mg;
         }
+
         console.log(total_protein,total_fat,total_carbon, total_calcium,total_salt, total_vitaminC);
-        BodyInfo.findOne({user: req.user._id}, (err, user) => {
+        BodyInfo.findOne({user_id : req.params.id}, (err, user) => {
             const user_kcal = user.user_kcal;
-            Report.findOneAndUpdate({user: req.user._id}, 
+            console.log(user_kcal);
+            Report.findOneAndUpdate({user_id : req.params.id}, 
                 {$set : 
                     { 
                         intake_kcal : total_kcal,
@@ -61,12 +63,21 @@ router.get('/:id', auth, (req, res) => {
                         vitamin_C_score : setup.getVitaminCScore(user_kcal, total_vitaminC),
                         calcium_score : setup.getCalciumScore(user_kcal, total_calcium),
                         salt_score : setup.getSaltScore(user_kcal, total_salt),
-                        nutrition_score: setup.getNutritionScore( setup.getCarbonScore(user_kcal, total_carbon),setup.getProteinScore(user_kcal,total_protein),setup.getFatScore(user_kcal, total_fat),setup.getVitaminCScore(user_kcal, total_vitaminC),setup.getCalciumScore(user_kcal, total_calcium),setup.getSaltScore(user_kcal, total_salt))
+                        nutrition_score : setup.getNutritionScore(setup.getCarbonScore(user_kcal, total_carbon),setup.getProteinScore(user_kcal,total_protein), setup.getFatScore(user_kcal, total_fat),setup.getVitaminCScore(user_kcal, total_vitaminC),setup.getCalciumScore(user_kcal, total_calcium),setup.getSaltScore(user_kcal, total_salt))
                 }}, {new: true}, (err, doc) => {
+                    
                 if(err) return res.json(err);
                 return res.json({total : total_kcal, doc});
             });
-        });
-    }).sort({ registeredAt: -1 }).populate('food'); 
+        }).sort({updatedAt: -1});
+    }).populate('food'); 
 });
+
+
+router.get('/lastMission/:id', auth, (req, res) => {
+    Mission.find({user_id : req.params.id, mission_chosen: 'Y'}, (err, docs) => {
+        return res.json(docs);
+    }).select('user_id content mission_state performedAt').sort({performedAt : -1});
+});
+
 module.exports = router;

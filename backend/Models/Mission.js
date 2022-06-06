@@ -9,8 +9,32 @@ const missionSchema = mongoose.Schema({
     user_id : {
         type : String
     },
-    content: {
-        type: Array
+    content: [
+        {
+            id: { type: mongoose.Schema.Types.ObjectId, ref: 'FoodSelect'},
+            name: { type: String},
+            points: { type: Number},
+            name :  { type: String}, 
+            when : { type: String}, 
+            detail : { type: String}, 
+            once : { type: Number}, 
+            unit: { type: String}, 
+            kcal : { type: Number}, 
+            water_g : { type: Number}, 
+            protein_g : { type: Number}, 
+            fat_g : { type: Number}, 
+            carbon_g : { type: Number}, 
+            sugars_g : { type: Number}, 
+            calcium_mg : { type: Number}, 
+            salt_mg : { type: Number}, 
+            zinc_mg : { type: Number}, 
+            vitaminC_mg : { type: Number}
+        }
+    ],
+    mission_chosen : {
+        type: String,
+        enum : ['Y', 'N'],
+        default : 'N'
     },
     mission_state: {
         type: String,
@@ -19,7 +43,6 @@ const missionSchema = mongoose.Schema({
     },
     selectedAt: {
         type: Date,
-        default: moment().format("YYYY-MM-DD")
     },
     performedAt: {
         type: Date
