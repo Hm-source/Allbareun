@@ -41,10 +41,13 @@ router.post('/add/:id', auth, async (req, res) => {
 
 router.get('/list/:id', auth, (req, res) => {
     var total_kcal = 0;
+
     Intake.find({user_id: req.params.id}, (err, doc) => {
         if (err) return res.json(err);
-        
-        for (i = 0; i < 2; i++) {
+        var num = doc.length;
+        if (num == 0 ) {return res.json({message : '먹은 음식이 없습니다.'})};
+        console.log(num);
+        for (i = 0; i < num; i++) {
             total_kcal += doc[i].food.kcal;
             console.log(doc[i].food.kcal);
         }

@@ -43,9 +43,6 @@ router.get('/:id', auth, (req, res) => {
             total_vitaminC += doc[i].food.vitaminC_mg;
         }
 
-        //Mission에서 찾은 값 더해주기.
-
-        
         console.log(total_protein,total_fat,total_carbon, total_calcium,total_salt, total_vitaminC);
         BodyInfo.findOne({user_id : req.params.id}, (err, user) => {
             const user_kcal = user.user_kcal;

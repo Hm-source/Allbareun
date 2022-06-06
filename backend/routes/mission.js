@@ -97,21 +97,25 @@ router.get('/recommend/:id', auth, async (req, res) => {
                     user : req.user._id,
                     user_id : req.params.id,
                     content : docs[index2],
+                    selectedAt : now
                 })
                 const mission3 = new Mission({
                     user : req.user._id,
                     user_id : req.params.id,
                     content : docs[index3],
+                    selectedAt : now
                 })
                 const mission4 = new Mission({
                     user : req.user._id,
                     user_id : req.params.id,
                     content : docs[index4],
+                    selectedAt : now
                 })
                 const mission5 = new Mission({
                     user : req.user._id,
                     user_id : req.params.id,
                     content : docs[index5],
+                    selectedAt : now
                 })
                 const mission_arr = [mission1, mission2, mission3, mission4, mission5];
                 try { 
@@ -137,15 +141,19 @@ router.get('/recommend/:id', auth, async (req, res) => {
 
 //부모가 미션 선택
 router.post('/chooseMission', auth, (req, res) => {
-    const content = req.body.content;
-    console.log(content);
+    const contents = req.body.content;
+    console.log(contents);
 
 
     for (i=0; i<content.length; i++) {
-        Mission.findOneAndUpdate({user:req.user._id, "content.name": content[i], selectedAt : now, mission_chose: 'N'}, 
-        { mission_chosen : 'Y' }, {new : true});
+        Mission.findOneAndUpdate({user:req.user._id, name : contents[i].name, selectedAt : now, mission_chosen: 'N'}, 
+        { mission_chosen : 'Y' }, {new : true}, (err, miss) => {
+            console.log(miss);
+        } );
     }
-    
+    Mission.find({user:req.user._id, selectedAt : now}, (err, docs) => {
+        return res.json(docs);
+    })
 });
 
 // 자녀한테 추천되는 미션
