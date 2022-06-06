@@ -92,6 +92,7 @@ router.get('/recommend/:id', auth, async (req, res) => {
                     user : req.user._id,
                     user_id : req.params.id,
                     content : docs[index1],
+                    selectedAt : now
                 })
                 const mission2 = new Mission({
                     user : req.user._id,
@@ -139,46 +140,52 @@ router.get('/recommend/:id', auth, async (req, res) => {
     })
 });
 
+//부모 미션 직접 추가
+
 //부모가 미션 선택
 router.post('/chooseMission', auth, (req, res) => {
     const contents = req.body.content;
     console.log(contents);
+    console.log(contents.length);
 
-
-    for (i=0; i<content.length; i++) {
-        Mission.findOneAndUpdate({user:req.user._id, name : contents[i].name, selectedAt : now, mission_chosen: 'N'}, 
+    for (i=0; i<contents.length; i++) {
+        console.log(contents[i].name);
+        Mission.findOneAndUpdate({user:req.user._id, 'content.name' : contents[i].name , selectedAt : now, mission_chosen: 'N'}, 
         { mission_chosen : 'Y' }, {new : true}, (err, miss) => {
+            console.log("mission_chosen" + i);
             console.log(miss);
         } );
     }
-    Mission.find({user:req.user._id, selectedAt : now}, (err, docs) => {
+    Mission.find({user:req.user._id, mission_chosen: 'Y',selectedAt : now}, (err, docs) => {
         return res.json(docs);
     })
 });
 
 // 자녀한테 추천되는 미션
-router.get('/showMission', auth, (req, res) => {
+router.get('/showMission/:id', auth, (req, res) => {
     Mission.find({user_id : req.params.id, selectedAt : now, mission_chosen : 'Y'}, (err, docs) => {
         res.json(docs);
     })
 });
 
 // 자녀가 미션 수행하면 intake되게해야함.
-router.post('/performMission', auth, (req, res) => {
+router.post('/performMission/:id', auth, (req, res) => {
     const content = req.body.content;
 
 
     for (i=0; i<content.length; i++) {
-        Mission.findOneAndUpdate({user_id : req.user._id, "content.name": content[i], selectedAt : now, mission_chose: 'N'}, 
+        Mission.findOneAndUpdate({user_id : req.user._id, "content.name": content[i], selectedAt : now, mission_state: 'new', mission_chosen : 'Y'}, 
         { mission_state : 'done' }, {new : true}, (err, doc) => {
             console.log(doc.name);
             var newIntake = new Intake({
                 user : req.user._id,
-                user_id : req.user.user_id,
+                user_id : req.params.id,
                 name : content[0].name,
-                food : content[0]._id
+                mission : content[0]._id
             });
-            newIntake.save();
+            newIntake.save( (err, result) => {
+                return res.json(result);
+            });
         });
     }
     

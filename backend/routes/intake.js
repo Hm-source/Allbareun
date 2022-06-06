@@ -10,7 +10,8 @@ const { Food } = require('../Models/Food');
 const { Report } = require('../Models/Report');
 const { ObjectId } = require('mongodb');
 const { json } = require('body-parser');
-
+const moment = require('moment');
+const now = moment().format('YYYY-MM-DD');
 
 router.post('/add/:id', auth, async (req, res) => {
     Food.findOne( { name : req.body.name }, (err, food) => {
@@ -48,9 +49,11 @@ router.get('/list/:id', auth, (req, res) => {
         if (num == 0 ) {return res.json({message : '먹은 음식이 없습니다.'})};
         console.log(num);
         for (i = 0; i < num; i++) {
-            total_kcal += doc[i].food.kcal;
-            console.log(doc[i].food.kcal);
+            if ( doc[i].selectedAt == now) {
+                total_kcal += doc[i].food.kcal; 
+            }  
         }
+        console.log("오늘 먹은 음식의 칼로리는 " + total_kcal);
         return res.json({total : total_kcal, doc});
     }).populate('food');
     
