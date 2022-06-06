@@ -11,7 +11,7 @@ const { doc } = require('prettier');
 const { Intake } = require('../Models/Intake');
 const { FoodSelect } = require('../Models/FoodSelect');
 const { BodyInfo } = require('../Models/BodyInfo');
-
+const { Mission } = require('../Models/Mission');
 
 
 router.get('/:id', auth, (req, res) => {
@@ -72,4 +72,12 @@ router.get('/:id', auth, (req, res) => {
         }).sort({updatedAt: -1});
     }).populate('food'); 
 });
+
+
+router.get('/lastMission/:id', auth, (req, res) => {
+    Mission.find({user_id : req.params.id, mission_chosen: 'Y'}, (err, docs) => {
+        return res.json(docs);
+    }).select('user_id content mission_state performedAt').sort({performedAt : -1});
+});
+
 module.exports = router;

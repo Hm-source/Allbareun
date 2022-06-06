@@ -194,7 +194,7 @@ router.post('/performMission/:id', auth, (req, res) => {
     const name = req.body.name;
 
     Mission.findOneAndUpdate({user_id : req.params.id , 'content.name' : name, selectedAt : now, mission_state: 'new', mission_chosen : 'Y'}, 
-        { mission_state : 'done' }, {new : true}, (err, doc) => {
+        { mission_state : 'done' , performedAt : now }, {new : true}, (err, doc) => {
             console.log(doc);
             if (doc == null) return res.json({message: '수행한 미션이 없습니다.'});
             var newIntake = new Intake({
@@ -218,6 +218,7 @@ router.get('/performMission/:id', auth, (req, res) => {
         if(err) return res.json({message: false});
         return res.json(docs);
     })
-})
+});
+
 
 module.exports = router; 
