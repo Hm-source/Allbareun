@@ -15,9 +15,6 @@ const intakeSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 
         type: String,
     },
     food : {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Food'
-    },
-    mission : {
         type: mongoose.Schema.Types.ObjectId, ref: 'FoodSelect'
     }, 
     selectedAt: { // 식품 선택 날짜

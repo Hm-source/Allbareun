@@ -7,6 +7,7 @@ const { auth } = require('../middleware/auth');
 const { BodyInfo } = require('../Models/BodyInfo');
 const { Intake } = require('../Models/Intake');
 const { Food } = require('../Models/Food');
+const { FoodSelect } = require('../Models/FoodSelect');
 const { Report } = require('../Models/Report');
 const { ObjectId } = require('mongodb');
 const { json } = require('body-parser');
@@ -14,7 +15,7 @@ const moment = require('moment');
 const now = moment().format('YYYY-MM-DD');
 
 router.post('/add/:id', auth, async (req, res) => {
-    Food.findOne( { name : req.body.name }, (err, food) => {
+    FoodSelect.findOne( { name : req.body.name }, (err, food) => {
         if (err) return res.json({success : false});
         console.log(food);
         

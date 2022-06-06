@@ -9,7 +9,7 @@ const { auth } = require('../middleware/auth');
 const { Report } = require('../Models/Report');
 const { doc } = require('prettier');
 const { Intake } = require('../Models/Intake');
-const { Food } = require('../Models/Food');
+const { FoodSelect } = require('../Models/FoodSelect');
 const { BodyInfo } = require('../Models/BodyInfo');
 
 
@@ -63,9 +63,9 @@ router.get('/:id', auth, (req, res) => {
                         vitamin_C_score : setup.getVitaminCScore(user_kcal, total_vitaminC),
                         calcium_score : setup.getCalciumScore(user_kcal, total_calcium),
                         salt_score : setup.getSaltScore(user_kcal, total_salt),
-                        nutrition_score: setup.getNutritionScore( setup.getCarbonScore(user_kcal, total_carbon),setup.getProteinScore(user_kcal,total_protein),setup.getFatScore(user_kcal, total_fat),setup.getVitaminCScore(user_kcal, total_vitaminC),setup.getCalciumScore(user_kcal, total_calcium),setup.getSaltScore(user_kcal, total_salt))
+                        nutrition_score : setup.getNutritionScore(setup.getCarbonScore(user_kcal, total_carbon),setup.getProteinScore(user_kcal,total_protein), setup.getFatScore(user_kcal, total_fat),setup.getVitaminCScore(user_kcal, total_vitaminC),setup.getCalciumScore(user_kcal, total_calcium),setup.getSaltScore(user_kcal, total_salt))
                 }}, {new: true}, (err, doc) => {
-                    console.log(setup.getNutritionScore( setup.getCarbonScore(user_kcal, total_carbon),setup.getProteinScore(user_kcal,total_protein),setup.getFatScore(user_kcal, total_fat),setup.getVitaminCScore(user_kcal, total_vitaminC),setup.getCalciumScore(user_kcal, total_calcium),setup.getSaltScore(user_kcal, total_salt)));
+                    
                 if(err) return res.json(err);
                 return res.json({total : total_kcal, doc});
             });
