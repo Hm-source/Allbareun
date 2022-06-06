@@ -132,9 +132,9 @@ module.exports.getCalciumScore = (user_kcal, calcium) => {
     var _calcium = (calcium/(user_kcal * (Math.round(0.28236693561962 *1000) / 1000)))*100;
     var calcium_score;
     if ( _calcium <= 20) {
-        salt_score = 20;
+        calcium_score = 20;
     } else if ( _calcium <= 50 ) {
-        salt_score = 30;
+        calcium_score = 30;
     } else if ( _calcium <= 70) {
         calcium_score = 70;
     } else {
@@ -182,10 +182,7 @@ module.exports.getVitaminCScore= (user_kcal,vitamin_C) => {
 
 
 module.exports.getNutritionScore = (carbon_score, protein_score, fat_score, salt_score, vitamin_C_score,calcium_score ) => {
-    var arr = [carbon_score , protein_score , fat_score , salt_score , vitamin_C_score , calcium_score];
-    const result = arr.reduce(function add(sum, currValue) {
-        return sum + currValue;
-    }, 0);
-    avg = Math.round(result/6)
-    return avg;
+    var sum = carbon_score + protein_score + fat_score + salt_score + vitamin_C_score + calcium_score;
+    var avg = Math.round(sum/6);
+    return avg
 };

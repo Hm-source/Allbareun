@@ -141,9 +141,27 @@ router.get('/recommend/:id', auth, async (req, res) => {
 });
 
 //부모 미션 직접 추가
+router.post('/addMission', auth, (req, res) => {
+    const food = req.body.name;
+    FoodSelect.findOne({ name : food}, (err, docs) => {
+        const newMission = new Mission({
+            user : req.user._id,
+            user_id : req.user.partner_id,
+            content : docs,
+            selectedAt : now
+        });
+        newMission.save((err, result) => {
+            if(err) {return res.json({message :false})}
+            return res.json(result);
+        })
+    })
+    
+});
+
 
 //부모가 미션 선택
 router.post('/chooseMission', auth, (req, res) => {
+
     const contents = req.body.content;
     console.log(contents);
     console.log(contents.length);
@@ -156,10 +174,13 @@ router.post('/chooseMission', auth, (req, res) => {
             console.log(miss);
         } );
     }
+});
+
+router.get('/chooseMission', auth, (req, res) => {
     Mission.find({user:req.user._id, mission_chosen: 'Y',selectedAt : now}, (err, docs) => {
         return res.json(docs);
     })
-});
+})
 
 // 자녀한테 추천되는 미션
 router.get('/showMission/:id', auth, (req, res) => {
@@ -170,25 +191,39 @@ router.get('/showMission/:id', auth, (req, res) => {
 
 // 자녀가 미션 수행하면 intake되게해야함.
 router.post('/performMission/:id', auth, (req, res) => {
-    const content = req.body.content;
+    const contents = req.body.content;
 
 
-    for (i=0; i<content.length; i++) {
-        Mission.findOneAndUpdate({user_id : req.user._id, "content.name": content[i], selectedAt : now, mission_state: 'new', mission_chosen : 'Y'}, 
+    for (i=0; i<contents.length; i++) {
+        console.log(contents[i].name);
+        Mission.findOneAndUpdate({user_id : req.params.id , 'content.name' : contents[i].name, selectedAt : now, mission_state: 'new', mission_chosen : 'Y'}, 
         { mission_state : 'done' }, {new : true}, (err, doc) => {
-            console.log(doc.name);
+            console.log(doc);
+            if (doc == null) return res.json({message: '수행한 미션이 없습니다.'});
             var newIntake = new Intake({
                 user : req.user._id,
                 user_id : req.params.id,
-                name : content[0].name,
-                mission : content[0]._id
+                name : doc.content[0].name,
+                food : doc.content[0]._id,
+                selectedAt : now
             });
-            newIntake.save( (err, result) => {
-                return res.json(result);
-            });
+            newIntake.save((err)=> {
+                if (err) {return res.json({message: false})}
+                else return res.json({message: '미션을 수행하여 먹은 음식에 저장되었습니다.'});
+            })
+
         });
-    }
+        console.log('finish');
+    } 
+
     
 });
+
+router.get('/performMission/:id', auth, (req, res) => {
+    Mission.find({ user_id : req.params.id, selectedAt : now, mission_state : 'done', mission_chosen : 'Y'}, (err, docs) => {
+        if(err) return res.json({message: false});
+        return res.json(docs);
+    })
+})
 
 module.exports = router; 

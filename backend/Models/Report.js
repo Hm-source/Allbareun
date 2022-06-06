@@ -77,7 +77,7 @@ const reportSchema = mongoose.Schema({  // userSchema라는 이름의 schema를 
         type: Number
     },
     nutrition_score: {
-        type: Number,
+        type: Number
     },
     registeredAt: {
         type: Date,
