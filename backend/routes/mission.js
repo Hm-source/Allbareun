@@ -67,16 +67,16 @@ router.get('/recommend/:id', auth, async (req, res) => {
         }
 
         if(arr[5].value <100) {
-            vita = Math.floor((doc[0].user_kcal* (Math.round(0.0347768513427074*1000) / 1000))/3);
+            vita = Math.floor((doc[0].user_kcal* (Math.round(0.0347768513427074*1000) / 1000))/7);
         } else {
-            vita = Math.floor((doc[0].user_kcal* (Math.round(0.0347768513427074*1000) / 1000))/4);
+            vita = Math.floor((doc[0].user_kcal* (Math.round(0.0347768513427074*1000) / 1000))/8);
         }
-        console.log(car, fa, pro, cal, vita, sa);
+        console.log(car, pro, fa, sa, cal, vita);
         
 
         FoodSelect.find({ $and: [
-            { $and: [{salt_mg: { $lte : sa}},{ fat_g : {$lte : fa} } ] },
-            { $or: [{ carbon_g : {$lte : car} }, { vitaminC_mg : { $gte: vita } }, { calcium_mg: { $gte : cal} }, {protein_g: { $gte : pro}} ] },
+            { $and: [{salt_mg: { $lte : sa}},{ fat_g : {$lte : fa} },{ vitaminC_mg : { $gte: vita } } ] },
+            { $or: [{ carbon_g : {$lte : car} }, { calcium_mg: { $gte : cal} }, {protein_g: { $gte : pro}} ] },
         ] }).exec(function(err, docs) {
             if (err) return res.json(err);
             var _count = (docs.length)-1;
