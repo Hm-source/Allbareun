@@ -1,7 +1,7 @@
 // index.js
 const express = require('express'); // express 임포트
 const app = express(); // app생성
-const port = port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
 const cookieParser = require('cookie-parser');
 const config = require('./config/key');
