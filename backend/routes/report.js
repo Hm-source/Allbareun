@@ -7,7 +7,6 @@ const setup = require('../set');
 const { User } = require('../Models/User');
 const { auth } = require('../middleware/auth');
 const { Report } = require('../Models/Report');
-const { doc } = require('prettier');
 const { Intake } = require('../Models/Intake');
 const { FoodSelect } = require('../Models/FoodSelect');
 const { BodyInfo } = require('../Models/BodyInfo');
